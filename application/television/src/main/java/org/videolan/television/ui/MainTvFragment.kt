@@ -69,7 +69,6 @@ class MainTvFragment : BrowseSupportFragment(), OnItemViewSelectedListener, OnIt
     private lateinit var nowPlayingAdapter: ArrayObjectAdapter
     private lateinit var recentlyPlayedAdapter: ArrayObjectAdapter
     private lateinit var recentlyAddedAdapter: ArrayObjectAdapter
-    private lateinit var videoAdapter: ArrayObjectAdapter
     private lateinit var historyAdapter: ArrayObjectAdapter
     private lateinit var favoritesAdapter: ArrayObjectAdapter
     private lateinit var browserAdapter: ArrayObjectAdapter
@@ -78,7 +77,6 @@ class MainTvFragment : BrowseSupportFragment(), OnItemViewSelectedListener, OnIt
     private lateinit var nowPlayingRow: ListRow
     private lateinit var recentlyPlayedRow: ListRow
     private lateinit var recentlyAdddedRow: ListRow
-    private lateinit var videoRow: ListRow
     private lateinit var historyRow: ListRow
     private lateinit var favoritesRow: ListRow
     private lateinit var browsersRow: ListRow
@@ -136,11 +134,6 @@ class MainTvFragment : BrowseSupportFragment(), OnItemViewSelectedListener, OnIt
         val recentlyAddedHeader = HeaderItem(HEADER_RECENTLY_ADDED, getString(R.string.recently_added))
         recentlyAdddedRow = ListRow(recentlyAddedHeader, recentlyAddedAdapter)
         rowsAdapter.add(recentlyAdddedRow)
-        // Video
-        videoAdapter = ArrayObjectAdapter(CardPresenter(ctx))
-        val videoHeader = HeaderItem(HEADER_VIDEO, getString(R.string.video))
-        videoRow = ListRow(videoHeader, videoAdapter)
-        rowsAdapter.add(videoRow)
 
         favoritesAdapter = ArrayObjectAdapter(CardPresenter(ctx))
         val favoritesHeader = HeaderItem(HEADER_PLAYLISTS, getString(R.string.favorites))
@@ -242,10 +235,6 @@ class MainTvFragment : BrowseSupportFragment(), OnItemViewSelectedListener, OnIt
             browserAdapter.setItems(it, diffCallback)
             addAndCheckLoadedLines(HEADER_NETWORK)
         }
-        model.videos.observe(requireActivity()) {
-            videoAdapter.setItems(it, diffCallback)
-            addAndCheckLoadedLines(HEADER_VIDEO)
-        }
         model.nowPlaying.observe(requireActivity()) {
             displayNowPlaying = it.isNotEmpty()
             nowPlayingAdapter.setItems(it, diffCallback)
@@ -286,7 +275,7 @@ class MainTvFragment : BrowseSupportFragment(), OnItemViewSelectedListener, OnIt
     }
 
     private fun resetLines() {
-        val adapters = listOf(nowPlayingRow, recentlyPlayedRow, recentlyAdddedRow, videoRow, historyRow, browsersRow, miscRow).filter {
+        val adapters = listOf(nowPlayingRow, recentlyPlayedRow, recentlyAdddedRow, historyRow, browsersRow, miscRow).filter {
             when {
                 !displayRecentlyPlayed && it == recentlyPlayedRow -> false
                 !displayRecentlyAdded && it == recentlyAdddedRow -> false
