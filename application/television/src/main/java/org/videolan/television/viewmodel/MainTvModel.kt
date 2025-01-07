@@ -110,7 +110,10 @@ class MainTvModel(app: Application) : AndroidViewModel(app), Medialibrary.OnMedi
 
     suspend fun updateHistory() {
         if (!showHistory) return
-        (history as MutableLiveData).value = context.getFromMl { history(Medialibrary.HISTORY_TYPE_LOCAL).toMutableList() }
+        (history as MutableLiveData).value = context.getFromMl {
+            history(Medialibrary.HISTORY_TYPE_LOCAL).toMutableList()
+                .groupBy { it.uri.retrieveParent() }.map { it.value.first() }
+        }
     }
 
     private suspend fun updateBrowsers() {
